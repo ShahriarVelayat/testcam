@@ -4,7 +4,6 @@
 <head>
 	<title>3DMAP</title>
 	<meta charset="utf-8">
-	<meta http-equiv="refresh" content="60" />
 	<meta name="viewport" content="user-scalable=no, initial-scale=1">
 	<style>
 		body {
@@ -86,6 +85,8 @@
 			// Create your background scene
 			var backgroundScene = new THREE.Scene();
 			var backgroundCamera = new THREE.Camera();
+										backgroundCamera.position.z = 400;
+
 			controls1 = new THREE.DeviceOrientationControls(backgroundCamera);
 
 			backgroundScene.add(backgroundCamera);
