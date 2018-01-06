@@ -6,11 +6,26 @@
 	<meta charset="utf-8">
 	<meta http-equiv="refresh" content="60" />
 	<meta name="viewport" content="user-scalable=no, initial-scale=1">
+	<style>
+		body {
+			margin: 0px;
+			background-color: #000000;
+			overflow: hidden;
+		}
 
+		canvas {
+			border: 1px solid black;
+			background: #000
+		}
+	</style>
 </head>
 
-<body background-color : transparent >
-	<video id="player" width="100%" height="100%"  autoplay></video>
+<body>
+	<div id="map" style="visibility: hidden;"></div>
+	<!-- <div id="container"></div> -->
+	<script src="./three.js"></script>
+	<script src="./DeviceOrientationControls.js"></script>
+	<video id="player" width="0%" height="0%" style="visibility: hidden; float:left;" autoplay></video>
 	<script>
 		var player = document.getElementById('player');
 		var handleSuccess = function(stream) {
@@ -24,5 +39,99 @@
 			.then(handleSuccess);
 	</script>
 
-	</body>
-	</html>
+	<script>
+		// import { SpriteText2D, textAlign } from 'three-text2d'
+
+		var container, camera, scene, renderer, controls, controls1, video;
+
+		init();
+		animate();
+	
+		function init() {
+
+
+			// container = document.getElementById('container');
+			camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
+			controls = new THREE.DeviceOrientationControls(camera);
+			scene = new THREE.Scene();
+							camera.position.z = 400;
+
+			
+		
+		var texture = new THREE.TextureLoader().load( 'img/crate.gif' );
+				var geometry = new THREE.BoxBufferGeometry( 200, 200, 200 );
+				var material = new THREE.MeshBasicMaterial( { map: texture } );
+				mesh = new THREE.Mesh( geometry, material );
+				scene.add( mesh );
+			
+		
+			// Create your renderer
+			renderer = new THREE.WebGLRenderer();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			renderer.setPixelRatio(window.devicePixelRatio);
+			document.body.appendChild(renderer.domElement);
+
+			//create camera picture for background
+			var video = document.getElementById('player');
+			var video_texture = new THREE.VideoTexture(video);
+			var backgroundMesh = new THREE.Mesh(
+				new THREE.PlaneGeometry(2, 2, 0),
+				new THREE.MeshBasicMaterial({
+					map: video_texture
+				}));
+			video_texture.minFilter = THREE.NearestFilter;
+			backgroundMesh.material.depthTest = false;
+			backgroundMesh.material.depthWrite = false;
+
+			// Create your background scene
+			var backgroundScene = new THREE.Scene();
+			var backgroundCamera = new THREE.Camera();
+			controls1 = new THREE.DeviceOrientationControls(backgroundCamera);
+
+			backgroundScene.add(backgroundCamera);
+			backgroundScene.add(backgroundMesh);
+
+			//
+
+			window.addEventListener('resize', onWindowResize, false);
+			var render = function() {
+				requestAnimationFrame(render);
+
+				renderer.autoClear = false;
+				renderer.clear();
+				renderer.render(backgroundScene, backgroundCamera);
+				renderer.render(scene, camera);
+			};
+
+			render();
+		}
+		//function for changing user location every 1 sec
+	
+
+		function animate() {
+			window.requestAnimationFrame(animate);
+			controls.update();
+			renderer.render(scene, camera);
+		}
+
+		function onWindowResize() {
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+		}
+
+		function error(err) {
+			console.log(err);
+			// window.open("error.html", "_self")
+		};
+
+
+	
+
+
+	
+	</script>
+
+</body>
+
+</html>
