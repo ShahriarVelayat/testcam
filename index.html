@@ -11,20 +11,14 @@
 			background-color: #000000;
 			overflow: hidden;
 		}
-
-		canvas {
-			border: 1px solid black;
-			background: #000
-		}
 	</style>
 </head>
 
 <body>
-	<div id="map" style="visibility: hidden;"></div>
-	<!-- <div id="container"></div> -->
 	<script src="./three.js"></script>
 	<script src="./DeviceOrientationControls.js"></script>
-	<video id="player" width="0%" height="0%" style="visibility: hidden; float:left;" autoplay></video>
+	<video id="player" width="0%" height="0%" style="visibility: hidden; float:left;" autoplay>
+	</video>
 	<script>
 		var player = document.getElementById('player');
 		var handleSuccess = function(stream) {
@@ -39,27 +33,19 @@
 	</script>
 
 	<script>
-		// import { SpriteText2D, textAlign } from 'three-text2d'
-
-		var container, camera, scene, renderer, controls, controls1, video;
+		var camera, scene, renderer, controls, controls1, video;
 
 		init();
 		animate();
-	
+
 		function init() {
-
-
-			// container = document.getElementById('container');
+			
+			console.log('init');
 			camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
 			controls = new THREE.DeviceOrientationControls(camera);
 			scene = new THREE.Scene();
-							camera.position.z = 400;
+			camera.position.z = 400;
 
-			
-		
-		
-			
-		
 			// Create your renderer
 			renderer = new THREE.WebGLRenderer();
 			renderer.setSize(window.innerWidth, window.innerHeight);
@@ -81,7 +67,7 @@
 			// Create your background scene
 			var backgroundScene = new THREE.Scene();
 			var backgroundCamera = new THREE.Camera();
-			
+
 			controls1 = new THREE.DeviceOrientationControls(backgroundCamera);
 
 			backgroundScene.add(backgroundCamera);
@@ -99,17 +85,17 @@
 				renderer.render(scene, camera);
 			};
 
-			var texture = new THREE.TextureLoader().load( 'img/crate.gif' );
-				var geometry = new THREE.BoxBufferGeometry( 200, 200, 200 );
-				var material = new THREE.MeshBasicMaterial( { map: texture } );
-				mesh = new THREE.Mesh( geometry, material );
-				scene.add( mesh );
-			
-			
+			var texture = new THREE.TextureLoader().load('img/crate.gif');
+			var geometry = new THREE.BoxBufferGeometry(200, 200, 200);
+			var material = new THREE.MeshBasicMaterial({
+				map: texture
+			});
+			mesh = new THREE.Mesh(geometry, material);
+			scene.add(mesh);
+
+
 			render();
 		}
-		//function for changing user location every 1 sec
-	
 
 		function animate() {
 			window.requestAnimationFrame(animate);
@@ -127,12 +113,6 @@
 			console.log(err);
 			// window.open("error.html", "_self")
 		};
-
-
-	
-
-
-	
 	</script>
 
 </body>
