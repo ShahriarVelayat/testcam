@@ -57,11 +57,7 @@
 
 			
 		
-		var texture = new THREE.TextureLoader().load( 'img/crate.gif' );
-				var geometry = new THREE.BoxBufferGeometry( 200, 200, 200 );
-				var material = new THREE.MeshBasicMaterial( { map: texture } );
-				mesh = new THREE.Mesh( geometry, material );
-				scene.add( mesh );
+		
 			
 		
 			// Create your renderer
@@ -85,8 +81,7 @@
 			// Create your background scene
 			var backgroundScene = new THREE.Scene();
 			var backgroundCamera = new THREE.Camera();
-										backgroundCamera.position.z = 400;
-
+			
 			controls1 = new THREE.DeviceOrientationControls(backgroundCamera);
 
 			backgroundScene.add(backgroundCamera);
@@ -104,6 +99,13 @@
 				renderer.render(scene, camera);
 			};
 
+			var texture = new THREE.TextureLoader().load( 'img/crate.gif' );
+				var geometry = new THREE.BoxBufferGeometry( 200, 200, 200 );
+				var material = new THREE.MeshBasicMaterial( { map: texture } );
+				mesh = new THREE.Mesh( geometry, material );
+				scene.add( mesh );
+			
+			
 			render();
 		}
 		//function for changing user location every 1 sec
