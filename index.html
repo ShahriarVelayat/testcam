@@ -15,10 +15,11 @@
 </head>
 
 <body>
-	<script src="./three.js"></script>
-	<script src="./DeviceOrientationControls.js"></script>
 	<video id="player" width="0%" height="0%" style="visibility: hidden; float:left;" autoplay>
 	</video>
+	<script src="./three.js"></script>
+	<script src="./DeviceOrientationControls.js"></script>
+	
 	<script>
 		var player = document.getElementById('player');
 		var handleSuccess = function(stream) {
@@ -33,7 +34,7 @@
 	</script>
 
 	<script>
-		var camera, scene, renderer, controls, controls1, video ,mesh;
+		var camera, scene, renderer, controls, controls1 ,mesh;
 
 		init();
 		animate();
@@ -92,6 +93,7 @@
 			});
 			mesh = new THREE.Mesh(geometry, material);
 			scene.add(mesh);
+			console.log('Cube');
 
 
 			render();
