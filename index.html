@@ -47,6 +47,17 @@
 			scene = new THREE.Scene();
 			camera.position.z = 400;
 
+			
+				var texture = new THREE.TextureLoader().load('img/crate.gif');
+			var geometry = new THREE.BoxBufferGeometry(200, 200, 200);
+			var material = new THREE.MeshBasicMaterial({
+				map: texture
+			});
+			mesh = new THREE.Mesh(geometry, material);
+			scene.add(mesh);
+			console.log('Cube');
+
+			
 			// Create your renderer
 			renderer = new THREE.WebGLRenderer();
 			renderer.setSize(window.innerWidth, window.innerHeight);
@@ -77,26 +88,9 @@
 			//
 
 			window.addEventListener('resize', onWindowResize, false);
-			var render = function() {
-				requestAnimationFrame(render);
 
-				renderer.autoClear = false;
-				renderer.clear();
 				renderer.render(backgroundScene, backgroundCamera);
 				renderer.render(scene, camera);
-			};
-
-			var texture = new THREE.TextureLoader().load('img/crate.gif');
-			var geometry = new THREE.BoxBufferGeometry(200, 200, 200);
-			var material = new THREE.MeshBasicMaterial({
-				map: texture
-			});
-			mesh = new THREE.Mesh(geometry, material);
-			scene.add(mesh);
-			console.log('Cube');
-
-
-			render();
 		}
 
 		function animate() {
