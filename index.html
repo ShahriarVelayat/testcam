@@ -36,6 +36,7 @@
 	<div id="container"></div>
 	<script src="./three.js"></script>
 	<script src="./DeviceOrientationControls.js"></script>
+	<script src="./OrbitControls.js"></script>
 	<script>
 		var player = document.getElementById('player');
 		var handleSuccess = function(stream) {
@@ -57,7 +58,7 @@
 		function init() {
 			container = document.getElementById('container');
 			camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
-			controls = new THREE.DeviceOrientationControls(camera);
+			controls = new THREE.OrbitControls(camera);
 			scene = new THREE.Scene();
 			var video = document.getElementById('player');
 			var video_texture = new THREE.VideoTexture(video);
