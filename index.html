@@ -1,122 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<script src='./three.min.js'></script>
+<script src='./threex.webcamtexture.js'></script>
+<script src='./DeviceOrientationControls.js'></script>
 
-<head>
-	<title>3DMAP</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="user-scalable=no, initial-scale=1">
-	<style>
-		body {
-			margin: 0px;
-			background-color: #000000;
-			overflow: hidden;
-		}
-	</style>
-</head>
-
-<body>
-	<video id="player" width="0%" height="0%" style="visibility: hidden; float:left;" autoplay>
-	</video>
-	<script src="./three.js"></script>
-	<script src="./DeviceOrientationControls.js"></script>
-	
+<body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'>
 	<script>
-		var player = document.getElementById('player');
-		var handleSuccess = function(stream) {
-			player.srcObject = stream;
-		};
-		navigator.mediaDevices.getUserMedia({
-				video: {
-					facingMode: "environment"
-				}
-			})
-			.then(handleSuccess);
-	</script>
+  var controls;
+		var renderer = new THREE.WebGLRenderer();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		document.body.appendChild(renderer.domElement);
 
-	<script>
-		var camera, scene, renderer, controls, controls1 ,mesh;
+		var onRenderFcts = [];
+		var scene = new THREE.Scene();
+		var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 100);
+		camera.position.z = 3;
 
-		init();
-		animate();
+		//////////////////////////////////////////////////////////////////////////////////
+		//		add an object and make it move					//
+		//////////////////////////////////////////////////////////////////////////////////
 
-		function init() {
-			
-			console.log('init');
-			camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
-			controls = new THREE.DeviceOrientationControls(camera);
-			scene = new THREE.Scene();
-			camera.position.z = 400;
+		// create the webcamTexture
+		var webcamTexture = new THREEx.WebcamTexture()
+		onRenderFcts.push(function(delta, now) {
+			webcamTexture.update(delta, now)
+		})
 
-			// Create your renderer
-			renderer = new THREE.WebGLRenderer();
-			renderer.setSize(window.innerWidth, window.innerHeight);
-			renderer.setPixelRatio(window.devicePixelRatio);
-			document.body.appendChild(renderer.domElement);
-
-			//create camera picture for background
-			var video = document.getElementById('player');
-			var video_texture = new THREE.VideoTexture(video);
-			var backgroundMesh = new THREE.Mesh(
-				new THREE.PlaneGeometry(2, 2, 0),
-				new THREE.MeshBasicMaterial({
-					map: video_texture
-				}));
-			video_texture.minFilter = THREE.NearestFilter;
-			backgroundMesh.material.depthTest = false;
-			backgroundMesh.material.depthWrite = false;
-
-			// Create your background scene
-			var backgroundScene = new THREE.Scene();
-			var backgroundCamera = new THREE.Camera();
-
-			controls1 = new THREE.DeviceOrientationControls(backgroundCamera);
-
-			backgroundScene.add(backgroundCamera);
-			backgroundScene.add(backgroundMesh);
-
-			//
-
-			window.addEventListener('resize', onWindowResize, false);
-			var render = function() {
-				renderer.autoClear = false;
-				renderer.clear();
-				renderer.render(backgroundScene, backgroundCamera);
-				renderer.render(scene, camera);
-			};
-
-			var texture = new THREE.TextureLoader().load('img/crate.gif');
-			var geometry = new THREE.BoxBufferGeometry(200, 200, 200);
-			var material = new THREE.MeshBasicMaterial({
-				map: texture
-			});
-			mesh = new THREE.Mesh(geometry, material);
-			scene.add(mesh);
-			console.log('Cube');
+		// use the texture in a THREE.Mesh
+		var geometry = new THREE.CubeGeometry(1, 1, 1);
+		var material = new THREE.MeshBasicMaterial({
+			map: webcamTexture.texture
+		});
+		var mesh = new THREE.Mesh(geometry, material);
+		scene.add(mesh);
 
 
-			render();
-		}
+		//////////////////////////////////////////////////////////////////////////////////
+		//		Camera Controls							//
+		//////////////////////////////////////////////////////////////////////////////////
+	   controls = new THREE.DeviceOrientationControls(camera);
+		//////////////////////////////////////////////////////////////////////////////////
+		//		render the whole thing on the page
+		//////////////////////////////////////////////////////////////////////////////////
 
-		function animate() {
-			window.requestAnimationFrame(render);
+		// handle window resize
+		window.addEventListener('resize', function() {
+			renderer.setSize(window.innerWidth, window.innerHeight)
+			camera.aspect = window.innerWidth / window.innerHeight
+			camera.updateProjectionMatrix()
+		}, false)
 
-			window.requestAnimationFrame(animate);
-			controls.update();
+
+		// render the scene
+		onRenderFcts.push(function() {
 			renderer.render(scene, camera);
-		}
+		})
 
-		function onWindowResize() {
-			camera.aspect = window.innerWidth / window.innerHeight;
-			camera.updateProjectionMatrix();
-			renderer.setSize(window.innerWidth, window.innerHeight);
-		}
-
-		function error(err) {
-			console.log(err);
-			// window.open("error.html", "_self")
-		};
+		// run the rendering loop
+		var lastTimeMsec = null
+		requestAnimationFrame(function animate(nowMsec) {
+      controls.update();
+			// keep looping
+			requestAnimationFrame(animate);
+			// measure time
+			lastTimeMsec = lastTimeMsec || nowMsec - 1000 / 60
+			var deltaMsec = Math.min(200, nowMsec - lastTimeMsec)
+			lastTimeMsec = nowMsec
+			// call each update function
+			onRenderFcts.forEach(function(onRenderFct) {
+				onRenderFct(deltaMsec / 1000, nowMsec / 1000)
+			})
+		})
 	</script>
-
 </body>
-
-</html>
