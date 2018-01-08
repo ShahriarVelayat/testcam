@@ -58,7 +58,7 @@
 		function init() {
 			container = document.getElementById('container');
 			camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
-			controls = new THREE.OrbitControls(camera);
+			controls = new THREE.DeviceOrientationControls(camera);
 			scene = new THREE.Scene();
 			var video = document.getElementById('player');
 			var video_texture = new THREE.VideoTexture(video);
