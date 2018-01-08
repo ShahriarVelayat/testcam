@@ -77,14 +77,20 @@
 			backgroundScene.add(backgroundCamera);
 					backgroundScene.add(backgroundMesh);
 
-			var helperGeometry = new THREE.BoxBufferGeometry(100, 100, 100, 4, 4, 4);
-			var helperMaterial = new THREE.MeshBasicMaterial({
-				color: 0xff00ff,
-				wireframe: true
-			});
-			var helper = new THREE.Mesh(helperGeometry, helperMaterial);
-			scene.add(helper);
+			// var helperGeometry = new THREE.BoxBufferGeometry(100, 100, 100, 4, 4, 4);
+			// var helperMaterial = new THREE.MeshBasicMaterial({
+			// 	color: 0xff00ff,
+			// 	wireframe: true
+			// });
+			// var helper = new THREE.Mesh(helperGeometry, helperMaterial);
+			// scene.add(helper);
 			//
+			var texture = new THREE.TextureLoader().load( './crate.gif' );
+							var geometry = new THREE.BoxBufferGeometry( 200, 200, 200 );
+							var material = new THREE.MeshBasicMaterial( { map: texture } );
+							mesh = new THREE.Mesh( geometry, material );
+							scene.add( mesh );
+
 			renderer = new THREE.WebGLRenderer();
 			renderer.setPixelRatio(window.devicePixelRatio);
 			renderer.setSize(window.innerWidth, window.innerHeight);
