@@ -75,6 +75,7 @@
 			backgroundScene.add(backgroundMesh);
 
 			//
+				renderer.render(scene, camera);
 
 			window.addEventListener('resize', onWindowResize, false);
 			var render = function() {
@@ -83,7 +84,6 @@
 				renderer.autoClear = false;
 				renderer.clear();
 				renderer.render(backgroundScene, backgroundCamera);
-				renderer.render(scene, camera);
 			};
 
 			var texture = new THREE.TextureLoader().load('img/crate.gif');
