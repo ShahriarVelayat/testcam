@@ -90,11 +90,12 @@
 			renderer.autoClear = false;
 			renderer.clear();
 			renderer.render(backgroundScene, backgroundCamera);
-			renderer.render(scene, camera);
 		};
 
 		function animate() {
 			window.requestAnimationFrame(animate);
+			renderer.render(scene, camera);
+
 		}
 
 		function onWindowResize() {
