@@ -90,6 +90,7 @@
 							var material = new THREE.MeshBasicMaterial( { map: texture } );
 							mesh = new THREE.Mesh( geometry, material );
 							scene.add( mesh );
+							mesh.position.z = 400;
 
 			renderer = new THREE.WebGLRenderer();
 			renderer.setPixelRatio(window.devicePixelRatio);
